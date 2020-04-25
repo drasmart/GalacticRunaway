@@ -8,7 +8,15 @@ namespace HexGrid
     {
         public HexCoords3 coords;
 
-        public void OnValidate()
+        private void OnValidate()
+        {
+            UpdatePosition();
+        }
+        public void UpdateCoords()
+        {
+            coords = new HexCoords3(transform.position);
+        }
+        public void UpdatePosition()
         {
             transform.position = coords.toVector3();
         }
