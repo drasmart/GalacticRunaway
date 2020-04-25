@@ -29,9 +29,13 @@ namespace HexGrid
             return new HexCoords3Int(Mathf.RoundToInt(coords.u), Mathf.RoundToInt(coords.v), Mathf.RoundToInt(coords.y));
         }
 
-        public string toString()
+        public override string ToString()
         {
             return "HexCoords2Int(" + u + ", " + v + ")";
+        }
+        public Vector3 ToVector3()
+        {
+            return ((HexCoords3)this).ToVector3();
         }
     }
 }

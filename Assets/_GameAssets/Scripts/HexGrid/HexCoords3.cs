@@ -13,7 +13,7 @@ namespace HexGrid
         public float v;
         public float y;
 
-        public Vector3 toVector3()
+        public Vector3 ToVector3()
         {
             float x = u - v / 2;
             float z = v * yStep;
@@ -32,7 +32,7 @@ namespace HexGrid
             y = position.y;
         }
 
-        public string toString()
+        public override string ToString()
         {
             return "HexCoords3(" + u + ", " + v + ", " + y + ")";
         }

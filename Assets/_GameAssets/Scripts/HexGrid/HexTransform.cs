@@ -18,7 +18,7 @@ namespace HexGrid
         }
         public void UpdatePosition()
         {
-            transform.position = coords.toVector3();
+            transform.position = coords.ToVector3();
         }
     }
 }

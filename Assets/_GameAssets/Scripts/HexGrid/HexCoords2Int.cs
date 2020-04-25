@@ -36,9 +36,13 @@ namespace HexGrid
             return new HexCoords2Int(coords.u, coords.v);
         }
 
-        public string toString()
+        public override string ToString()
         {
             return "HexCoords2Int(" + u + ", " + v + ")";
+        }
+        public Vector3 ToVector3()
+        {
+            return ((HexCoords2)this).ToVector3();
         }
     }
 }

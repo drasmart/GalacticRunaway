@@ -28,9 +28,13 @@ namespace HexGrid
             return new HexCoords2(coords.u, coords.v);
         }
 
-        public string toString()
+        public override string ToString()
         {
             return "HexCoords2(" + u + ", " + v + ")";
+        }
+        public Vector3 ToVector3()
+        {
+            return ((HexCoords3)this).ToVector3();
         }
     }
 }
