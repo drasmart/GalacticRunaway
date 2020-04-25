@@ -36,5 +36,41 @@ namespace HexGrid
         {
             return ((HexCoords3)this).ToVector3();
         }
+
+        public static HexCoords2 operator +(HexCoords2 lhs, HexCoords2 rhs)
+        {
+            return new HexCoords2(lhs.u + rhs.u, lhs.v + rhs.v);
+        }
+        public static HexCoords2 operator -(HexCoords2 lhs, HexCoords2 rhs)
+        {
+            return lhs + (-rhs);
+        }
+        public static HexCoords2 operator -(HexCoords2 thiz)
+        {
+            return new HexCoords2(-thiz.u, -thiz.v);
+        }
+        public static HexCoords2 operator *(HexCoords2 thiz, int k)
+        {
+            return new HexCoords2(thiz.u * k, thiz.v * k);
+        }
+        public static HexCoords2 operator /(HexCoords2 thiz, int k)
+        {
+            return thiz * (1 / k);
+        }
+        public static HexCoords2 operator *(HexCoords2 thiz, float k)
+        {
+            return new HexCoords2(thiz.u * k, thiz.v * k);
+        }
+        public static HexCoords2 operator /(HexCoords2 thiz, float k)
+        {
+            return thiz * (1 / k);
+        }
+
+        public static readonly HexCoords2 zero = new HexCoords2(0, 0);
+        public static readonly HexCoords2 one = new HexCoords2(1, 1);
+        public static readonly HexCoords2 uPlus = new HexCoords2(1, 0);
+        public static readonly HexCoords2 vPlus = new HexCoords2(0, 1);
+        public static readonly HexCoords2 uMinus = new HexCoords2(-1, 0);
+        public static readonly HexCoords2 vMinus = new HexCoords2(0, -1);
     }
 }

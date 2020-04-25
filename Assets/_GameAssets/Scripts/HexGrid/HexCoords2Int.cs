@@ -44,5 +44,30 @@ namespace HexGrid
         {
             return ((HexCoords2)this).ToVector3();
         }
+
+
+        public static HexCoords2Int operator +(HexCoords2Int lhs, HexCoords2Int rhs)
+        {
+            return new HexCoords2Int(lhs.u + rhs.u, lhs.v + rhs.v);
+        }
+        public static HexCoords2Int operator -(HexCoords2Int lhs, HexCoords2Int rhs)
+        {
+            return lhs + (-rhs);
+        }
+        public static HexCoords2Int operator -(HexCoords2Int thiz)
+        {
+            return new HexCoords2Int(-thiz.u, -thiz.v);
+        }
+        public static HexCoords2Int operator *(HexCoords2Int thiz, int k)
+        {
+            return new HexCoords2Int(thiz.u * k, thiz.v * k);
+        }
+
+        public static readonly HexCoords2Int zero = new HexCoords2Int(0, 0);
+        public static readonly HexCoords2Int one = new HexCoords2Int(1, 1);
+        public static readonly HexCoords2Int uPlus  = new HexCoords2Int(1, 0);
+        public static readonly HexCoords2Int vPlus  = new HexCoords2Int(0, 1);
+        public static readonly HexCoords2Int uMinus = new HexCoords2Int(-1, 0);
+        public static readonly HexCoords2Int vMinus = new HexCoords2Int(0, -1);
     }
 }

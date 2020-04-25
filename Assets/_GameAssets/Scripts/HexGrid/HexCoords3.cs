@@ -36,5 +36,43 @@ namespace HexGrid
         {
             return "HexCoords3(" + u + ", " + v + ", " + y + ")";
         }
+
+        public static HexCoords3 operator +(HexCoords3 lhs, HexCoords3 rhs)
+        {
+            return new HexCoords3(lhs.u + rhs.u, lhs.v + rhs.v, lhs.y + rhs.y);
+        }
+        public static HexCoords3 operator -(HexCoords3 lhs, HexCoords3 rhs)
+        {
+            return lhs + (-rhs);
+        }
+        public static HexCoords3 operator -(HexCoords3 thiz)
+        {
+            return new HexCoords3(-thiz.u, -thiz.v, -thiz.y);
+        }
+        public static HexCoords3 operator *(HexCoords3 thiz, int k)
+        {
+            return new HexCoords3(thiz.u * k, thiz.v * k, thiz.y * k);
+        }
+        public static HexCoords3 operator /(HexCoords3 thiz, int k)
+        {
+            return thiz * (1/k);
+        }
+        public static HexCoords3 operator *(HexCoords3 thiz, float k)
+        {
+            return new HexCoords3(thiz.u * k, thiz.v * k, thiz.y * k);
+        }
+        public static HexCoords3 operator /(HexCoords3 thiz, float k)
+        {
+            return thiz * (1 / k);
+        }
+
+        public static readonly HexCoords3 zero = new HexCoords3(0, 0, 0);
+        public static readonly HexCoords3 one = new HexCoords3(1, 1, 1);
+        public static readonly HexCoords3 uPlus = new HexCoords3(1, 0, 0);
+        public static readonly HexCoords3 vPlus = new HexCoords3(0, 1, 0);
+        public static readonly HexCoords3 yPlus = new HexCoords3(0, 0, 1);
+        public static readonly HexCoords3 uMinus = new HexCoords3(-1, 0, 0);
+        public static readonly HexCoords3 vMinus = new HexCoords3(0, -1, 0);
+        public static readonly HexCoords3 yMinus = new HexCoords3(0, 0, -1);
     }
 }

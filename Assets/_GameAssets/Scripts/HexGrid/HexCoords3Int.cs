@@ -37,5 +37,31 @@ namespace HexGrid
         {
             return ((HexCoords3)this).ToVector3();
         }
+
+        public static HexCoords3Int operator +(HexCoords3Int lhs, HexCoords3Int rhs)
+        {
+            return new HexCoords3Int(lhs.u + rhs.u, lhs.v + rhs.v, lhs.y + rhs.y);
+        }
+        public static HexCoords3Int operator -(HexCoords3Int lhs, HexCoords3Int rhs)
+        {
+            return lhs + (-rhs);
+        }
+        public static HexCoords3Int operator -(HexCoords3Int thiz)
+        {
+            return new HexCoords3Int(-thiz.u, -thiz.v, -thiz.y);
+        }
+        public static HexCoords3Int operator *(HexCoords3Int thiz, int k)
+        {
+            return new HexCoords3Int(thiz.u * k, thiz.v * k, thiz.y * k);
+        }
+
+        public static readonly HexCoords3Int zero = new HexCoords3Int(0, 0, 0);
+        public static readonly HexCoords3Int one = new HexCoords3Int(1, 1, 1);
+        public static readonly HexCoords3Int uPlus = new HexCoords3Int(1, 0, 0);
+        public static readonly HexCoords3Int vPlus = new HexCoords3Int(0, 1, 0);
+        public static readonly HexCoords3Int yPlus = new HexCoords3Int(0, 0, 1);
+        public static readonly HexCoords3Int uMinus = new HexCoords3Int(-1, 0, 0);
+        public static readonly HexCoords3Int vMinus = new HexCoords3Int(0, -1, 0);
+        public static readonly HexCoords3Int yMinus = new HexCoords3Int(0, 0, -1);
     }
 }
