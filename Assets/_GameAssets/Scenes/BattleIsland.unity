@@ -489,6 +489,7 @@ MonoBehaviour:
       - coords:
           u: 6
           v: 6
+        rotation: -150
         stats:
           hp: 0
           maxHP: 0
@@ -499,6 +500,7 @@ MonoBehaviour:
       - coords:
           u: 6
           v: 8
+        rotation: -90
         stats:
           hp: 0
           maxHP: 0
@@ -509,6 +511,7 @@ MonoBehaviour:
       - coords:
           u: 8
           v: 6
+        rotation: 150
         stats:
           hp: 0
           maxHP: 0
@@ -520,6 +523,7 @@ MonoBehaviour:
       - coords:
           u: -6
           v: -6
+        rotation: 30
         stats:
           hp: 0
           maxHP: 0
@@ -530,6 +534,7 @@ MonoBehaviour:
       - coords:
           u: -6
           v: -8
+        rotation: 90
         stats:
           hp: 0
           maxHP: 0
@@ -540,6 +545,7 @@ MonoBehaviour:
       - coords:
           u: -8
           v: -6
+        rotation: -30
         stats:
           hp: 0
           maxHP: 0

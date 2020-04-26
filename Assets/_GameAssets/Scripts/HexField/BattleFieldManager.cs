@@ -24,31 +24,51 @@ namespace HexField
 
         public void OnDrawGizmos()
         {
-            Debug.Log("1");
-            const float r = 0.45f;
-            Vector3 dy = Vector3.up * (r - 0.1f);
             Color oldColor = Gizmos.color;
             for (int i = 0, n = Mathf.Max(battleField.sides.Count, gizmoColors.sides.Count); i < n; i++)
             {
                 Gizmos.color = gizmoColors.sides[i];
                 foreach (var unit in battleField.sides[i].units)
                 {
-                    Gizmos.DrawWireSphere(unit.coords.ToVector3() + dy, r);
+                    DrawMarker(unit.coords, unit.rotation);
                 }
             }
             Gizmos.color = gizmoColors.pickups;
             foreach (var pickup in battleField.lootBoxes)
             {
-                Gizmos.DrawWireSphere(pickup.coords.ToVector3() + dy, r);
+                DrawMarker(pickup.coords, null);
             }
             Gizmos.color = gizmoColors.obstacles;
             foreach (var obstacle in battleField.obstacles)
             {
-                Gizmos.DrawWireSphere(obstacle.coords.ToVector3() + dy, r);
+                DrawMarker(obstacle.coords, null);
             }
             Gizmos.color = gizmoColors.limits;
             DrawLimits();
             Gizmos.color = oldColor;
+        }
+
+        private void DrawMarker(HexCoords2Int coords, float? rotation)
+        {
+            const float r = 0.45f;
+            const float l = 0.7f * r;
+            const float da = 45;
+            const float ay = 0.1f;
+            var p = coords.ToVector3();
+            var pa = p + Vector3.up * ay;
+            Gizmos.DrawWireSphere(pa, r);
+            if (rotation != null)
+            {
+                var a = rotation.Value;
+                var fwd = Quaternion.Euler(0, a, 0) * Vector3.forward * l;
+                var sideL = Quaternion.Euler(0, a + 180 - da, 0) * Vector3.forward * l;
+                var sideR = Quaternion.Euler(0, a + 180 + da, 0) * Vector3.forward * l;
+                var bck = Quaternion.Euler(0, a, 0) * Vector3.back * l * 0.5f;
+                Gizmos.DrawLine(pa + sideL, pa + fwd);
+                Gizmos.DrawLine(pa + sideR, pa + fwd);
+                Gizmos.DrawLine(pa + sideL, pa + bck);
+                Gizmos.DrawLine(pa + sideR, pa + bck);
+            }
         }
 
         private void DrawLimits()

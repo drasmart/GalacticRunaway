@@ -10,6 +10,7 @@ namespace HexField
     public class LandUnit
     {
         public HexCoords2Int coords;
+        public float rotation;
         public LandUnitStats stats;
     }
 }
