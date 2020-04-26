@@ -11,10 +11,26 @@ namespace HexField
     {
         public BattleField battleField = new BattleField();
 
-        [System.Serializable]
-        public class BattleFieldMutationEvent : UnityEvent<BattleFieldMutation> { }
+        [System.Serializable] public class BattleFieldMutationEvent : UnityEvent<BattleFieldMutation> { }
+        [System.Serializable] public class BattleFieldResizeEvent : UnityEvent<int> { }
 
         public BattleFieldMutationEvent onBattleFieldMutation;
+        public BattleFieldResizeEvent onBattleFieldResize;
+
+        private void Start()
+        {
+            onBattleFieldResize?.Invoke(battleField.radius);
+            if (onBattleFieldMutation != null)
+            {
+                for (int i = 0; i < battleField.sides.Count; i++)
+                    foreach (var unit in battleField.sides[i].units)
+                        onBattleFieldMutation.Invoke(new BattleFieldMutation(unit, unit.coords, i));
+                foreach (var obstacle in battleField.obstacles)
+                    onBattleFieldMutation.Invoke(new BattleFieldMutation(obstacle));
+                foreach (var lootBox in battleField.lootBoxes)
+                    onBattleFieldMutation.Invoke(new BattleFieldMutation(lootBox));
+            }
+        }
 
         #region Debug
         [Header("Debug")]
@@ -107,6 +123,13 @@ namespace HexField
                     yield return lootBox;
             yield break;
         }
+        public int GetUnitSide(LandUnit unit)
+        {
+            for (int i = 0; i < battleField.sides.Count; i++)
+                if (battleField.sides[i].units.Contains(unit))
+                    return i;
+            return 0;
+        }
         #endregion
 
         #region Mutation API
@@ -115,13 +138,13 @@ namespace HexField
             var oldCoords = landUnit.coords;
             landUnit.coords = newCoords;
             landUnit.rotation = rotation;
-            var mutation = new BattleFieldMutation(landUnit, oldCoords);
+            var mutation = new BattleFieldMutation(landUnit, oldCoords, GetUnitSide(landUnit));
             onBattleFieldMutation?.Invoke(mutation);
         }
         public void UpdateUnitStats(LandUnit landUnit, LandUnitStats newStats)
         {
             landUnit.stats = newStats;
-            var mutation = new BattleFieldMutation(landUnit, landUnit.coords);
+            var mutation = new BattleFieldMutation(landUnit, landUnit.coords, GetUnitSide(landUnit));
             if (newStats.hp <= 0)
             {
                 foreach (var side in battleField.sides)

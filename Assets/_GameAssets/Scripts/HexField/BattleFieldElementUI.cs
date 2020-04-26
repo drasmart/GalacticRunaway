@@ -1,12 +1,26 @@
-﻿using System.Collections;
+﻿using HexGrid;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace HexField
 {
-    [System.Serializable]
-    public class BattleFieldElementUI
+    [RequireComponent(typeof(HexTransform))]
+    public class BattleFieldElementUI: MonoBehaviour
     {
-        public GameObject thingy;
+        public BattleFieldElement modelElement;
+        private HexTransform hexTransform;
+
+        private void Awake()
+        {
+            hexTransform = GetComponent<HexTransform>();
+        }
+
+        public void RefreshUI()
+        {
+            hexTransform.coords = (HexCoords3Int)modelElement.coords;
+            hexTransform.UpdatePosition();
+            transform.eulerAngles = Vector3.up * modelElement.rotation;
+        }
     }
 }

@@ -10,5 +10,7 @@ namespace HexField
     {
         public HexCoords2Int coords;
         public float rotation;
+
+        public string positionProps => "coords: " + coords.ToString() + ", rotation: " + rotation.ToString();
     }
 }

@@ -9,26 +9,32 @@ namespace HexField
     public class BattleFieldMutation
     {
         public readonly BattleFieldElementType elementType;
+        public readonly BattleFieldElement element;
+        public readonly int side;
         public readonly LandUnit unit;
         public readonly LandObstacle obstacle;
         public readonly LootBox lootBox;
         public readonly HexCoords2Int oldCoords;
 
-        public BattleFieldMutation(LandUnit unit, HexCoords2Int oldCoords)
+        public BattleFieldMutation(LandUnit unit, HexCoords2Int oldCoords, int side)
         {
+            element = unit;
             elementType = BattleFieldElementType.Unit;
             this.unit = unit;
+            this.side = side;
             this.oldCoords = oldCoords;
         }
         public BattleFieldMutation(LandObstacle obstacle)
         {
+            element = obstacle;
             elementType = BattleFieldElementType.Obstacle;
             this.obstacle = obstacle;
             oldCoords = obstacle.coords;
         }
         public BattleFieldMutation(LootBox lootBox)
         {
-            elementType = BattleFieldElementType.Obstacle;
+            element = lootBox;
+            elementType = BattleFieldElementType.LootBox;
             this.lootBox = lootBox;
             oldCoords = lootBox.coords;
         }
@@ -41,6 +47,7 @@ namespace HexField
                 case BattleFieldElementType.Unit:
                     msg += "unit: " + unit.ToString();
                     msg += ", oldCoords: " + oldCoords.ToString();
+                    msg += ", side: " + side.ToString();
                     break;
                 case BattleFieldElementType.LootBox:
                     msg += "lootBox: " + lootBox.ToString();

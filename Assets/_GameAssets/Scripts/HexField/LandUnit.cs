@@ -9,5 +9,10 @@ namespace HexField
     public class LandUnit: BattleFieldElement
     {
         public LandUnitStats stats;
+
+        public override string ToString()
+        {
+            return "LandUnit(" + positionProps + ", stats: " + stats.ToString() + ")";
+        }
     }
 }

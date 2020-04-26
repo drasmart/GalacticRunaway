@@ -17,4 +17,4 @@ MonoBehaviour:
   - {fileID: 1796137368096064, guid: 7c1543f51c5b8cc488fc53ab3cbffbb1, type: 3}
   obstacle: {fileID: 4661435515762455780, guid: e289bf5debb17f6459818c207d781953,
     type: 3}
-  pickup: {fileID: 1000014038691284, guid: efebddd0b5766bd499be8b63f581de68, type: 3}
+  lootBox: {fileID: 1000011365394840, guid: 5142a683d65bbf84abea6f07db9099c7, type: 3}

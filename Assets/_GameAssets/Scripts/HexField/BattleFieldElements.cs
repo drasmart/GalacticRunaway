@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace HexField
 {
@@ -9,6 +10,7 @@ namespace HexField
     {
         public List<GameObject> sideUnits = new List<GameObject>();
         public GameObject obstacle = null;
-        public GameObject pickup = null;
+        [FormerlySerializedAs("pickup")]
+        public GameObject lootBox = null;
     }
 }
