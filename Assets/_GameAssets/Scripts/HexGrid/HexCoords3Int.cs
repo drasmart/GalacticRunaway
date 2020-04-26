@@ -72,6 +72,15 @@ namespace HexGrid
         {
             return u ^ v ^ y;
         }
+        public override bool Equals(object obj)
+        {
+            if (obj is HexCoords3Int)
+            {
+                var other = (HexCoords3Int)obj;
+                return this == other;
+            }
+            return false;
+        }
 
         public static readonly HexCoords3Int zero = new HexCoords3Int(0, 0, 0);
         public static readonly HexCoords3Int one = new HexCoords3Int(1, 1, 1);

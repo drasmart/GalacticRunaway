@@ -1,4 +1,5 @@
 ﻿using Boo.Lang.Environments;
+using HexField.UI;
 using HexGrid;
 using System.Collections;
 using System.Collections.Generic;
@@ -61,7 +62,7 @@ namespace HexField
             {
                 if (unregister && newCoords == null)
                 {
-                    Recycle(ui.gameObject);
+                    RecycleUI(ui);
                 } else
                 {
                     ui.RefreshUI();
@@ -73,7 +74,7 @@ namespace HexField
         #region Private Methods -- UIs Management
         private void RegisterUI(BattleFieldMutation mutation, BattleFieldElementUI ui)
         {
-            Dictionary<HexCoords2Int, List<BattleFieldElementUI>> uisDic = null;
+            Dictionary<HexCoords2Int, List<BattleFieldElementUI>> uisDic;
             if (createdUIs.ContainsKey(mutation.elementType))
             {
                 uisDic = createdUIs[mutation.elementType];
@@ -84,7 +85,7 @@ namespace HexField
                 createdUIs.Add(mutation.elementType, uisDic);
             }
             var coords = mutation.element.coords;
-            List <BattleFieldElementUI> uisList = null;
+            List <BattleFieldElementUI> uisList;
             if (uisDic.ContainsKey(coords))
             {
                 uisList = uisDic[coords];
@@ -100,6 +101,15 @@ namespace HexField
             var coords = mutation.oldCoords;
             var uisList = createdUIs[mutation.elementType][coords];
             uisList.Remove(ui);
+        }
+        private void RecycleUI(BattleFieldElementUI ui)
+        {
+            if (ui.healthBar)
+            {
+                Recycle(ui.healthBar.gameObject);
+                ui.healthBar = null;
+            }
+            Recycle(ui.gameObject);
         }
         private BattleFieldElementUI FindUI(BattleFieldMutation mutation)
         {
@@ -142,6 +152,17 @@ namespace HexField
             }
             result.modelElement = mutation.element;
             clone.transform.SetParent(transform, false);
+            if (mutation.element is Destructable)
+            {
+                var healthBar = Fabricate(elements?.healthBar)?.GetComponent<HealthBar>();
+                if (healthBar)
+                {
+                    result.healthBar = healthBar;
+                    healthBar.transform.SetParent(result.transform, false);
+                    healthBar.transform.localPosition = Vector3.zero;
+                    healthBar.transform.localScale = Vector3.one;
+                }
+            }
             return result;
         }
         private GameObject FindPrefab(BattleFieldMutation mutation)

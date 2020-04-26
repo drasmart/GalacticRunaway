@@ -18,3 +18,5 @@ MonoBehaviour:
   obstacle: {fileID: 4661435515762455780, guid: e289bf5debb17f6459818c207d781953,
     type: 3}
   lootBox: {fileID: 1000011365394840, guid: 5142a683d65bbf84abea6f07db9099c7, type: 3}
+  healthBar: {fileID: 1120556130043538958, guid: 55f970d76127e8247b86ab0fcd445bbf,
+    type: 3}

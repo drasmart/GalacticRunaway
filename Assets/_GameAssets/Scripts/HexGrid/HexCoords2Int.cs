@@ -81,6 +81,16 @@ namespace HexGrid
             return u ^ v;
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj is HexCoords2Int)
+            {
+                var other = (HexCoords2Int)obj;
+                return this == other;
+            }
+            return false;
+        }
+
         public static readonly HexCoords2Int zero = new HexCoords2Int(0, 0);
         public static readonly HexCoords2Int one = new HexCoords2Int(1, 1);
         public static readonly HexCoords2Int uPlus  = new HexCoords2Int(1, 0);

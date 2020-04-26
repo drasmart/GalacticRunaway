@@ -88,6 +88,15 @@ namespace HexGrid
         {
             return Tuple.Create(u, v).GetHashCode();
         }
+        public override bool Equals(object obj)
+        {
+            if (obj is HexCoords2)
+            {
+                var other = (HexCoords2)obj;
+                return this == other;
+            }
+            return false;
+        }
 
         public static readonly HexCoords2 zero = new HexCoords2(0, 0);
         public static readonly HexCoords2 one = new HexCoords2(1, 1);

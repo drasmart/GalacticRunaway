@@ -9,8 +9,8 @@ namespace HexField
     public class BattleFieldElements : ScriptableObject
     {
         public List<GameObject> sideUnits = new List<GameObject>();
-        public GameObject obstacle = null;
-        [FormerlySerializedAs("pickup")]
-        public GameObject lootBox = null;
+        public GameObject obstacle;
+        public GameObject lootBox;
+        public GameObject healthBar;
     }
 }
