@@ -10,9 +10,11 @@ namespace HexField
     {
         public BattleFieldElements elements;
         public Transform floorPlane;
+        public PrefabPool prefabPool;
 
         private Dictionary<BattleFieldElementType, Dictionary<HexCoords2Int, List<BattleFieldElementUI>>> createdUIs = new Dictionary<BattleFieldElementType, Dictionary<HexCoords2Int, List<BattleFieldElementUI>>>();
 
+        #region Field Mutation Events
         public void OnFieldResize(int newRadius)
         {
             if (floorPlane == null)
@@ -66,6 +68,9 @@ namespace HexField
                 }
             }
         }
+        #endregion
+
+        #region Private Methods -- UIs Management
         private void RegisterUI(BattleFieldMutation mutation, BattleFieldElementUI ui)
         {
             Dictionary<HexCoords2Int, List<BattleFieldElementUI>> uisDic = null;
@@ -159,16 +164,24 @@ namespace HexField
                     return null;
             }
         }
+        #endregion
 
         #region Prefab Pooling
-        // TODO: Implement
         private GameObject Fabricate(GameObject prefab)
         {
-            return Instantiate(prefab);
+            return prefabPool?.Dequeue(prefab).gameObject ?? Instantiate(prefab);
         }
         private void Recycle(GameObject target)
         {
-            Destroy(target);
+            var pooledObj = target.GetComponent<PooledObject>();
+            if (prefabPool && pooledObj)
+            {
+                prefabPool.Recycle(pooledObj);
+            }
+            else
+            {
+                Destroy(target);
+            }
         }
         #endregion
     }
