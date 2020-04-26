@@ -1,5 +1,4 @@
-﻿using HexGrid;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,10 +6,8 @@ using UnityEngine;
 namespace HexField
 {
     [Serializable]
-    public class LandUnit
+    public class LandUnit: BattleFieldElement
     {
-        public HexCoords2Int coords;
-        public float rotation;
         public LandUnitStats stats;
     }
 }

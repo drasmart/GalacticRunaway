@@ -1,13 +1,20 @@
 ﻿using HexGrid;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace HexField
 {
     public class BattleFieldManager : MonoBehaviour
     {
         public BattleField battleField = new BattleField();
+
+        [System.Serializable]
+        public class BattleFieldMutationEvent : UnityEvent<BattleFieldMutation> { }
+
+        public BattleFieldMutationEvent onBattleFieldMutation;
 
         #region Debug
         [Header("Debug")]
@@ -30,45 +37,38 @@ namespace HexField
                 Gizmos.color = gizmoColors.sides[i];
                 foreach (var unit in battleField.sides[i].units)
                 {
-                    DrawMarker(unit.coords, unit.rotation);
+                    DrawMarker(unit);
                 }
             }
             Gizmos.color = gizmoColors.pickups;
-            foreach (var pickup in battleField.lootBoxes)
-            {
-                DrawMarker(pickup.coords, null);
-            }
+            battleField.lootBoxes.ForEach(DrawMarker);
             Gizmos.color = gizmoColors.obstacles;
-            foreach (var obstacle in battleField.obstacles)
-            {
-                DrawMarker(obstacle.coords, null);
-            }
+            battleField.obstacles.ForEach(DrawMarker);
             Gizmos.color = gizmoColors.limits;
             DrawLimits();
             Gizmos.color = oldColor;
         }
 
-        private void DrawMarker(HexCoords2Int coords, float? rotation)
+        private void DrawMarker(BattleFieldElement element)
         {
             const float r = 0.45f;
             const float l = 0.7f * r;
             const float da = 45;
             const float ay = 0.1f;
-            var p = coords.ToVector3();
+
+            var rotation = element.rotation;
+            var p = element.coords.ToVector3();
+
             var pa = p + Vector3.up * ay;
             Gizmos.DrawWireSphere(pa, r);
-            if (rotation != null)
-            {
-                var a = rotation.Value;
-                var fwd = Quaternion.Euler(0, a, 0) * Vector3.forward * l;
-                var sideL = Quaternion.Euler(0, a + 180 - da, 0) * Vector3.forward * l;
-                var sideR = Quaternion.Euler(0, a + 180 + da, 0) * Vector3.forward * l;
-                var bck = Quaternion.Euler(0, a, 0) * Vector3.back * l * 0.5f;
-                Gizmos.DrawLine(pa + sideL, pa + fwd);
-                Gizmos.DrawLine(pa + sideR, pa + fwd);
-                Gizmos.DrawLine(pa + sideL, pa + bck);
-                Gizmos.DrawLine(pa + sideR, pa + bck);
-            }
+            var fwd = Quaternion.Euler(0, rotation, 0) * Vector3.forward * l;
+            var sideL = Quaternion.Euler(0, rotation + 180 - da, 0) * Vector3.forward * l;
+            var sideR = Quaternion.Euler(0, rotation + 180 + da, 0) * Vector3.forward * l;
+            var bck = Quaternion.Euler(0, rotation, 0) * Vector3.back * l * 0.5f;
+            Gizmos.DrawLine(pa + sideL, pa + fwd);
+            Gizmos.DrawLine(pa + sideR, pa + fwd);
+            Gizmos.DrawLine(pa + sideL, pa + bck);
+            Gizmos.DrawLine(pa + sideR, pa + bck);
         }
 
         private void DrawLimits()
@@ -89,6 +89,68 @@ namespace HexField
             {
                 Gizmos.DrawLine((loop[i] + dp).ToVector3() + dy, (loop[(i + 1) % 6] + dp).ToVector3() + dy);
             }
+        }
+        #endregion
+
+        #region Query API
+        public IEnumerable<BattleFieldElement> GetElementsAt(HexCoords2Int coords)
+        {
+            foreach (var side in battleField.sides)
+                foreach (var unit in side.units)
+                    if (unit.coords == coords)
+                        yield return unit;
+            foreach (var obstacle in battleField.obstacles)
+                if (obstacle.coords == coords)
+                    yield return obstacle;
+            foreach (var lootBox in battleField.lootBoxes)
+                if (lootBox.coords == coords)
+                    yield return lootBox;
+            yield break;
+        }
+        #endregion
+
+        #region Mutation API
+        public void MoveUnit(LandUnit landUnit, HexCoords2Int newCoords, int rotation)
+        {
+            var oldCoords = landUnit.coords;
+            landUnit.coords = newCoords;
+            landUnit.rotation = rotation;
+            var mutation = new BattleFieldMutation(landUnit, oldCoords);
+            onBattleFieldMutation?.Invoke(mutation);
+        }
+        public void UpdateUnitStats(LandUnit landUnit, LandUnitStats newStats)
+        {
+            landUnit.stats = newStats;
+            var mutation = new BattleFieldMutation(landUnit, landUnit.coords);
+            if (newStats.hp <= 0)
+            {
+                foreach (var side in battleField.sides)
+                {
+                    side.units.Remove(landUnit);
+                }
+            }
+            onBattleFieldMutation?.Invoke(mutation);
+        }
+        public void DamageObstacle(LandObstacle obstacle, int damage)
+        {
+            obstacle.hp -= damage;
+            if (obstacle.hp <= 0)
+            {
+                battleField.obstacles.Remove(obstacle);
+            }
+            var mutation = new BattleFieldMutation(obstacle);
+            onBattleFieldMutation?.Invoke(mutation);
+        }
+        public void CollectLootBox(LootBox lootBox, int sideIndex)
+        {
+            if (0 <= sideIndex && sideIndex < battleField.sides.Count)
+            {
+                battleField.sides[sideIndex].points += lootBox.points;
+            }
+            battleField.lootBoxes.Remove(lootBox);
+            lootBox.points = 0;
+            var mutation = new BattleFieldMutation(lootBox);
+            onBattleFieldMutation?.Invoke(mutation);
         }
         #endregion
     }

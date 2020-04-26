@@ -5,7 +5,7 @@ using UnityEngine;
 namespace HexField
 {
     [System.Serializable]
-    public class LandUnitStats
+    public struct LandUnitStats
     {
         public int hp;
         public int maxHP;

@@ -62,6 +62,24 @@ namespace HexGrid
         {
             return new HexCoords2Int(thiz.u * k, thiz.v * k);
         }
+        public static HexCoords2Int operator *(int k, HexCoords2Int thiz)
+        {
+            return thiz * k;
+        }
+
+        public static bool operator ==(HexCoords2Int lhs, HexCoords2Int rhs)
+        {
+            return (lhs.u == rhs.u) && (lhs.v == rhs.v);
+        }
+        public static bool operator !=(HexCoords2Int lhs, HexCoords2Int rhs)
+        {
+            return !(lhs == rhs);
+        }
+
+        public override int GetHashCode()
+        {
+            return u ^ v;
+        }
 
         public static readonly HexCoords2Int zero = new HexCoords2Int(0, 0);
         public static readonly HexCoords2Int one = new HexCoords2Int(1, 1);

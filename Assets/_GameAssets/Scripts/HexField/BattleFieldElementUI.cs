@@ -5,8 +5,8 @@ using UnityEngine;
 namespace HexField
 {
     [System.Serializable]
-    public class LootBox: BattleFieldElement
+    public class BattleFieldElementUI
     {
-        public int points = 1;
+        public GameObject thingy;
     }
 }

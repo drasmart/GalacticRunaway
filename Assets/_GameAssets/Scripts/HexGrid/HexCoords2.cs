@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -53,6 +54,10 @@ namespace HexGrid
         {
             return new HexCoords2(thiz.u * k, thiz.v * k);
         }
+        public static HexCoords2 operator *(int k, HexCoords2 thiz)
+        {
+            return thiz * k;
+        }
         public static HexCoords2 operator /(HexCoords2 thiz, int k)
         {
             return thiz * (1 / k);
@@ -61,9 +66,27 @@ namespace HexGrid
         {
             return new HexCoords2(thiz.u * k, thiz.v * k);
         }
+        public static HexCoords2 operator *(float k, HexCoords2 thiz)
+        {
+            return thiz * k;
+        }
         public static HexCoords2 operator /(HexCoords2 thiz, float k)
         {
             return thiz * (1 / k);
+        }
+
+        public static bool operator ==(HexCoords2 lhs, HexCoords2 rhs)
+        {
+            return (lhs.u == rhs.u) && (lhs.v == rhs.v);
+        }
+        public static bool operator !=(HexCoords2 lhs, HexCoords2 rhs)
+        {
+            return !(lhs == rhs);
+        }
+
+        public override int GetHashCode()
+        {
+            return Tuple.Create(u, v).GetHashCode();
         }
 
         public static readonly HexCoords2 zero = new HexCoords2(0, 0);

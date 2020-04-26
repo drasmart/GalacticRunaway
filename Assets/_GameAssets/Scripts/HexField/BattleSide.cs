@@ -9,5 +9,6 @@ namespace HexField
     public class BattleSide
     {
         public List<LandUnit> units = new List<LandUnit>();
+        public int points = 0;
     }
 }

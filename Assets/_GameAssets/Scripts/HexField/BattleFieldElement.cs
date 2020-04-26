@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HexGrid;
 
 namespace HexField
 {
     [System.Serializable]
-    public class LootBox: BattleFieldElement
+    public abstract class BattleFieldElement
     {
-        public int points = 1;
+        public HexCoords2Int coords;
+        public float rotation;
     }
 }
