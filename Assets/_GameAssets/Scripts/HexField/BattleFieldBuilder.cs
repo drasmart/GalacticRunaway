@@ -1,5 +1,4 @@
-﻿using Boo.Lang.Environments;
-using HexField.UI;
+﻿using HexField.UI;
 using HexGrid;
 using System.Collections;
 using System.Collections.Generic;

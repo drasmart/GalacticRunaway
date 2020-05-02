@@ -75,7 +75,7 @@ namespace HexField
             var rotation = element.rotation;
             var p = element.coords.ToVector3();
 
-            var pa = p + Vector3.up * ay;
+            var pa = p + Vector3.up * ay + transform.position;
             Gizmos.DrawWireSphere(pa, r);
             var fwd = Quaternion.Euler(0, rotation, 0) * Vector3.forward * l;
             var sideL = Quaternion.Euler(0, rotation + 180 - da, 0) * Vector3.forward * l;
@@ -99,7 +99,7 @@ namespace HexField
 
             HexCoords2 dp = -battleField.offset;
 
-            Vector3 dy = Vector3.one * 0.01f;
+            Vector3 dy = Vector3.one * 0.01f + transform.position;
             HexCoords2[] loop = new HexCoords2[] { up, uvp, vp, um, uvm, vm };
             for(int i = 0; i < 6; i++)
             {

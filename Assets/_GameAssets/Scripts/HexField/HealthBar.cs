@@ -43,7 +43,10 @@ namespace HexField.UI
         }
         private void OnValidate()
         {
-            RefreshUI();
+            if (Application.isPlaying)
+            {
+                RefreshUI();
+            }
         }
 
         private void RefreshUI()
