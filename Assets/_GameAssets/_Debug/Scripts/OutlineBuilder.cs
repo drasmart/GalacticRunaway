@@ -80,12 +80,14 @@ public class OutlineBuilder : MonoBehaviour
                 {
                     case HexNavMesh.CellRole.External:
                         PopulateList(new HexCoords2Int(u, v), HexNavMesh.CellRole.External, island.externalOutline.vertices);
+                        island.externalOutline.Optimize();
                         break;
                     case HexNavMesh.CellRole.Internal:
                         var newOutline = new HexVertexList();
                         newOutline.isLooped = true;
                         island.internalOutlines.Add(newOutline);
                         PopulateList(new HexCoords2Int(u, v), HexNavMesh.CellRole.Internal, newOutline.vertices);
+                        newOutline.Optimize();
                         break;
                 }
             }
