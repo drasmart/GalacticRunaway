@@ -14,9 +14,12 @@ public class OutlineBuilder : MonoBehaviour
     public OutlineRenderer ints;
     public IslandRenderer isl;
 
+    public UnityEvent onConstructionFinished = new UnityEvent();
+
     void Start()
     {
         BuildContourMatrix(src?.flags, exts?.flags, ints?.flags, isl?.island);
+        onConstructionFinished?.Invoke();
     }
 
     private void BuildContourMatrix(BoolMatrix cells, BoolMatrix externalEdges, BoolMatrix internalEdges, HexIsland island)

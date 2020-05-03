@@ -42,5 +42,15 @@ namespace HexField
             }
             vertices = newList;
         }
+
+        public List<Vector3> ToVector3List()
+        {
+            var result = new List<Vector3>();
+            foreach (var v in vertices)
+            {
+                result.Add(v.ToVector3());
+            }
+            return result;
+        }
     }
 }
