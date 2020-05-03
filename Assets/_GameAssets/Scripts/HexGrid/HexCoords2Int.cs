@@ -97,5 +97,26 @@ namespace HexGrid
         public static readonly HexCoords2Int vPlus  = new HexCoords2Int(0, 1);
         public static readonly HexCoords2Int uMinus = new HexCoords2Int(-1, 0);
         public static readonly HexCoords2Int vMinus = new HexCoords2Int(0, -1);
+
+        public static readonly HexCoords2Int[] gridDirections = new HexCoords2Int[]
+            {
+                uPlus,
+                one,
+                vPlus,
+                uMinus,
+                -one,
+                vMinus,
+            };
+
+        public HexCoords2Int[] Neighbors {
+            get {
+                var result = new HexCoords2Int[6];
+                for (int i = 0; i < 6; i++)
+                {
+                    result[i] = gridDirections[i] + this;
+                }
+                return result;
+            }
+        }
     }
 }

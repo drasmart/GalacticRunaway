@@ -46,7 +46,7 @@ namespace MatrixModels
                 matrix = new Row[rows];
                 for (int j = 0; j < rows; j++)
                 {
-                    if (oldMatrix == null && oldMatrix.Length <= j)
+                    if (oldMatrix == null || oldMatrix.Length <= j)
                     {
                         matrix[j] = new Row(columns);
                     }
@@ -70,7 +70,16 @@ namespace MatrixModels
 
         public Vector2Int Size {
             get { return new Vector2Int(columns, rows); }
-            set { Columns = value.y; Rows = value.x; }
+            set { Columns = value.x; Rows = value.y; }
+        }
+
+        public ValueType[,] ToArray()
+        {
+            var result = new ValueType[columns, rows];
+            for (int x = 0; x < columns; x++)
+                for (int y = 0; y < rows; y++)
+                    result[x, y] = matrix[y][x];
+            return result;
         }
 
         [System.Serializable]

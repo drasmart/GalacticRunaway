@@ -73,6 +73,15 @@ namespace MatrixModels
             set { Columns = value.y; Rows = value.x; }
         }
 
+        public ValueType[,] ToArray()
+        {
+            var result = new ValueType[columns, rows];
+            for (int x = 0; x < columns; x++)
+                for (int y = 0; y < rows; y++)
+                    result[x, y] = matrix[y][x];
+            return result;
+        }
+
         [System.Serializable]
         public class Row
         {

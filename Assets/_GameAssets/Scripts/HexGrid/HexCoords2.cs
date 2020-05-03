@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace HexGrid
@@ -104,5 +105,27 @@ namespace HexGrid
         public static readonly HexCoords2 vPlus = new HexCoords2(0, 1);
         public static readonly HexCoords2 uMinus = new HexCoords2(-1, 0);
         public static readonly HexCoords2 vMinus = new HexCoords2(0, -1);
+
+        public static readonly HexCoords2[] gridDirections = new HexCoords2[]
+            {
+                uPlus,
+                one,
+                vPlus,
+                uMinus,
+                -one,
+                vMinus,
+            };
+
+        public HexCoords2[] Neighbors {
+            get {
+                var result = new HexCoords2[6];
+                for (int i = 0; i < 6; i++)
+                {
+                    result[i] = gridDirections[i] + this;
+                }
+                return result;
+            }
+        }
+
     }
 }

@@ -1,6 +1,7 @@
 ﻿using HexGrid;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.Events;
@@ -89,18 +90,12 @@ namespace HexField
 
         private void DrawLimits()
         {
-            HexCoords2 uvp = HexCoords2.one * (battleField.radius - 0.5f);
-            HexCoords2 uvm = -uvp;
-
-            HexCoords2 up = uvp; up.v = 0;
-            HexCoords2 vp = uvp; vp.u = 0;
-            HexCoords2 um = uvm; um.v = 0;
-            HexCoords2 vm = uvm; vm.u = 0;
+            float r = battleField.radius - 0.5f;
 
             HexCoords2 dp = -battleField.offset;
 
             Vector3 dy = Vector3.one * 0.01f + transform.position;
-            HexCoords2[] loop = new HexCoords2[] { up, uvp, vp, um, uvm, vm };
+            HexCoords2[] loop = HexCoords2.gridDirections.Select((v) => v * r).ToArray();
             for(int i = 0; i < 6; i++)
             {
                 Gizmos.DrawLine((loop[i] + dp).ToVector3() + dy, (loop[(i + 1) % 6] + dp).ToVector3() + dy);

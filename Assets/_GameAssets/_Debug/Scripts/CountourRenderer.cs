@@ -12,6 +12,8 @@ public class CountourRenderer : MonoBehaviour
     public Color boundsColor = Color.white;
     [Range(0, 1)]
     public float radius = 0.5f;
+    [Min(0)]
+    public float scale = 1;
 
     private void OnDrawGizmos()
     {
@@ -22,7 +24,7 @@ public class CountourRenderer : MonoBehaviour
             for(int columnIndex = 0; columnIndex < flags.Columns; columnIndex++)
                 if (flags[new Vector2Int(columnIndex, rowIndex)])
                 {
-                    Gizmos.DrawWireSphere(new HexCoords2Int(columnIndex, rowIndex).ToVector3() + transform.position, radius);
+                    Gizmos.DrawWireSphere(new HexCoords2Int(columnIndex, rowIndex).ToVector3() * scale + transform.position, radius * scale);
                 }
         Gizmos.color = boundsColor;
         DrawLimits();
@@ -42,7 +44,7 @@ public class CountourRenderer : MonoBehaviour
         HexCoords2[] loop = new HexCoords2[] { up, uvp, vp, um, uvm, vm };
         for (int i = 0; i < 6; i++)
         {
-            Gizmos.DrawLine(loop[i].ToVector3() + dy + transform.position, loop[(i + 1) % 6].ToVector3() + dy + transform.position);
+            Gizmos.DrawLine(loop[i].ToVector3() * scale + dy + transform.position, loop[(i + 1) % 6].ToVector3() * scale + dy + transform.position);
         }
     }
 }
