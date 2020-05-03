@@ -4,10 +4,9 @@ using UnityEngine;
 using MatrixModels;
 using HexGrid;
 
-public class CountourRenderer : MonoBehaviour
+public class OutlineRenderer : MonoBehaviour
 {
     public BoolMatrix flags = new BoolMatrix();
-    public IntMatrix nums = new IntMatrix();
     public Color sphereColor = Color.cyan;
     public Color boundsColor = Color.white;
     [Range(0, 1)]
