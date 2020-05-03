@@ -88,6 +88,7 @@ public class OutlineBuilder : MonoBehaviour
                         island.internalOutlines.Add(newOutline);
                         PopulateList(new HexCoords2Int(u, v), HexNavMesh.CellRole.Internal, newOutline.vertices);
                         newOutline.Optimize();
+                        newOutline.Revert();
                         break;
                 }
             }

@@ -17,10 +17,11 @@ namespace HexField
             {
                 return;
             }
-            for(int i = 1; i < vertices.Count - 1; )
+            for(int i = (isLooped ? 0 : 1); i < vertices.Count - (isLooped ? 0 : 1); )
             {
-                var v0 = (vertices[i] - vertices[i - 1]).ToVector3().normalized;
-                var v1 = (vertices[i + 1] - vertices[i]).ToVector3().normalized;
+                int n = vertices.Count;
+                var v0 = (vertices[i] - vertices[(n + i - 1) % n]).ToVector3().normalized;
+                var v1 = (vertices[(i + 1) % n] - vertices[i]).ToVector3().normalized;
                 if (v0 == v1)
                 {
                     vertices.RemoveAt(i);
@@ -30,18 +31,16 @@ namespace HexField
                     i++;
                 }
             }
-            while (isLooped && vertices.Count > 2)
+        }
+
+        public void Revert()
+        {
+            var newList = new List<HexCoords3Int>(vertices.Count);
+            for(int i = 0, n = vertices.Count; i < n; i++)
             {
-                var v0 = (vertices[0] - vertices[vertices.Count - 1]).ToVector3().normalized;
-                var v1 = (vertices[1] - vertices[0]).ToVector3().normalized;
-                if (v0 == v1)
-                {
-                    vertices.RemoveAt(0);
-                } else
-                {
-                    break;
-                }
+                newList.Add(vertices[n - i - 1]);
             }
+            vertices = newList;
         }
     }
 }
