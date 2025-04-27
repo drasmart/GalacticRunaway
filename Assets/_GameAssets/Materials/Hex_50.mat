@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ProcHex1
+  m_Name: Hex_50
   m_Shader: {fileID: -6465566751694194690, guid: 956e91f17f7aea7489e5114383e5df0f,
     type: 3}
   m_Parent: {fileID: 0}
@@ -93,7 +93,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _HexTileFactor: 1
+    - _HexTileFactor: 0.5
     - _LineWidth: 0.2
     - _Metallic: 0
     - _Mode: 0
@@ -106,11 +106,12 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _AlphaPositions: {r: 0.2, g: 0.8, b: 0, a: 0}
-    - _BaseTileFactor: {r: 1, g: 1, b: 0, a: 0}
+    - _BaseTileFactor: {r: 25, g: 25, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _ColorPositions: {r: 0, g: 0.6, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _EndColor: {r: 0, g: 1, b: 1, a: 1}
+    - _HexTileOptions: {r: 25, g: 14.433757, b: 0, a: 0.1}
     - _InnerColor: {r: 1, g: 0, b: 1, a: 1}
     - _OuterColor: {r: 0, g: 1, b: 1, a: 1}
     - _StartColor: {r: 1, g: 0, b: 1, a: 1}

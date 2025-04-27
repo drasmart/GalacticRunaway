@@ -173,7 +173,7 @@
       "dependencies": {
         "com.unity.shadergraph": "17.0.4"
       },
-      "hash": "3808c9a8c2559c6214a1ae8ce02323bfb38efd13"
+      "hash": "48722efa518980d48ffda45b153bdcef7199c9a9"
     },
     "com.unity.modules.accessibility": {
       "version": "1.0.0",
