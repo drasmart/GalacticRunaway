@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using HexGrid;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -17,6 +18,7 @@ namespace HexField
         public Mesh BuildMesh()
         {
             var vertices = externalOutline.ToVector3List();
+            var uMin = externalOutline.vertices.Min(v => v.ToVector3().x) - 1;
             var polygon = new List<int>(vertices.Count + 2 * internalOutlines.Count + internalOutlines.Aggregate(0, (s, o) => s + o.vertices.Count));
             for(int i = 0; i < vertices.Count; i++)
             {
@@ -83,7 +85,7 @@ namespace HexField
             var tris = new List<int>();
             UnityAction<int> ClipEar = vIndex =>
             {
-                Debug.Log("Clipping vertex #" + polygon[vIndex].ToString() + " (@" + vIndex.ToString() + "): " + vertices[polygon[vIndex]].ToString());
+                Debug.Log($"Clipping vertex #{polygon[vIndex]} (@{vIndex}): {vertices[polygon[vIndex]]}");
                 int pn = polygon.Count;
                 tris.Add(polygon[(vIndex + 1) % pn]);
                 tris.Add(polygon[vIndex]);
@@ -185,7 +187,7 @@ namespace HexField
 
             Mesh mesh = new Mesh();
             mesh.vertices = vertices.ToArray();
-            mesh.uv = vertices.Select(v => new Vector2(v.x ,v.z)).ToArray();
+            mesh.uv = vertices.Select(v => new Vector2(v.x - uMin, v.z)).ToArray();
             mesh.triangles = tris.ToArray();
             mesh.RecalculateBounds();
             mesh.RecalculateNormals();
