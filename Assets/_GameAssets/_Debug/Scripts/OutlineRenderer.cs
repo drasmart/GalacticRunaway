@@ -16,6 +16,10 @@ public class OutlineRenderer : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        if (!enabled)
+        {
+            return;
+        }
         Color oldColor = Gizmos.color;
         Gizmos.color = sphereColor;
         var size = new Vector2Int(flags.Columns, flags.Rows);

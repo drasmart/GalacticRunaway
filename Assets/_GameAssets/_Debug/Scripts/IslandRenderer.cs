@@ -27,6 +27,10 @@ public class IslandRenderer : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        if (!enabled)
+        {
+            return;
+        }
         Color oldColor = Gizmos.color;
         Vector3 dy = transform.position + 0.01f * Vector3.up;
         Gizmos.color = externalOutlineColor;
