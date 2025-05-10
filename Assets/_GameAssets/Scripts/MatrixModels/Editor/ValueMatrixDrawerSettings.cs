@@ -30,6 +30,12 @@ namespace MatrixModels.Editor
                     {
                         className = objType,
                         propertyName = property.name,
+                        displayPrefs = new DisplayPrefs
+                        {
+                            showLabels = true,
+                            useSpacer = false,
+                            dx = 15,
+                        }
                     };
                     allPrefs.Add(entry);
                 }
@@ -42,10 +48,13 @@ namespace MatrixModels.Editor
         {
             public bool showLabels;
             public bool useSpacer;
+            public float dx;
 
             public bool Equals(DisplayPrefs other)
             {
-                return (showLabels == other.showLabels) && (useSpacer == other.useSpacer);
+                return (showLabels == other.showLabels)
+                       && (useSpacer == other.useSpacer)
+                       && (Mathf.Approximately(dx, other.dx));
             }
         }
 

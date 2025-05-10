@@ -9,10 +9,7 @@ namespace MatrixModels.Editor
     {
         private bool flipX;
         private bool flipY = true;
-        private bool showLabels = true;
         private bool hexGrid;
-        private bool useSpacer;
-        private float dx = 15;
         
         // ReSharper disable InconsistentNaming
         /// <summary>
@@ -97,12 +94,15 @@ namespace MatrixModels.Editor
 
             int r = rowsProperty.intValue;
             int c = colsProperty.intValue;
+            
+            bool showLabels = true;
+            bool useSpacer = false;
+            float dx = 15;
 
             if (unfold)
             {
                 EditorGUIUtility.labelWidth = wsl;
                 Rect sliderRect = new Rect(position.x + dmx, position.y + 2 * dty, position.width - dmx, dty);
-                dx = EditorGUI.Slider(sliderRect, new GUIContent("Cell Witdh"), dx, 15, 200);
 
                 float displayOptionsY = position.y + 3 * dty;
 
@@ -134,6 +134,7 @@ namespace MatrixModels.Editor
                 using (var box = ValueMatrixDrawerSettings.instance[property])
                 {
                     var prefs = box.Value;
+                    prefs.dx = dx = EditorGUI.Slider(sliderRect, new GUIContent("Cell Witdh"), prefs.dx, 15, 200);
                     prefs.showLabels = showLabels = EditorGUI.Toggle(showLabelsRect, prefs.showLabels);
                     prefs.useSpacer = useSpacer = EditorGUI.Toggle(spacerRect, prefs.useSpacer);
                     box.Value = prefs;
@@ -175,7 +176,7 @@ namespace MatrixModels.Editor
                         int vColumn = columnIndex;
                         if (flipX) { vColumn = c - vColumn - 1; }
                         SerializedProperty cellDataProperty = rowDataProperty.GetArrayElementAtIndex(columnIndex);
-                        Vector2 offset = CellRectOffset(vRow) * baseOffset + SpacingOffset(vRow, vColumn, modulationOffsetX, modulationOffsetY);
+                        Vector2 offset = CellRectOffset(vRow) * baseOffset + SpacingOffset(vRow, vColumn, modulationOffsetX, modulationOffsetY, useSpacer);
                         Rect cellRect = new Rect(matrixOffsetX + vColumn * dx + offset.x, matrixOffsetY + vRow * dy + offset.y, dx, dy);
                         EditorGUI.PropertyField(cellRect, cellDataProperty, GUIContent.none);
                     }
@@ -200,7 +201,7 @@ namespace MatrixModels.Editor
                     int mColumn = i;
                     int vColumn = i + 1;
                     if (flipX) { vColumn = c - vColumn; mColumn = c - mColumn - 1; }
-                    Vector2 offset = CellRectOffset(mRow) * baseOffset + SpacingOffset(mRow, mColumn, modulationOffsetX, modulationOffsetY);
+                    Vector2 offset = CellRectOffset(mRow) * baseOffset + SpacingOffset(mRow, mColumn, modulationOffsetX, modulationOffsetY, useSpacer);
                     string s = i.ToString();
                     int k = s.Length;
                     float w = k * wml;
@@ -218,7 +219,7 @@ namespace MatrixModels.Editor
                     int vRow = i + 1;
                     int mRow = i;
                     if (flipY) { vRow = r - vRow; mRow = r - mRow - 1; }
-                    Vector2 offset = CellRectOffset(mRow) * baseOffset + SpacingOffset(mRow, mColumn, modulationOffsetX, modulationOffsetY);
+                    Vector2 offset = CellRectOffset(mRow) * baseOffset + SpacingOffset(mRow, mColumn, modulationOffsetX, modulationOffsetY, useSpacer);
                     string s = i.ToString();
                     int k = s.Length;
                     float w = k * wml;
@@ -251,14 +252,18 @@ namespace MatrixModels.Editor
                 SerializedProperty rowsProperty = property.FindPropertyRelative("rows");
                 int r = rowsProperty.intValue;
                 float visualRows = r + 1;
-                if (showLabels)
+                using (var box = ValueMatrixDrawerSettings.instance[property])
                 {
-                    visualRows += 1;
-                }
-                if (useSpacer)
-                {
-                    int spacersCount = r / 5;
-                    visualRows += spacersCount * dby / dy;
+                    var prefs = box.Value;
+                    if (prefs.showLabels)
+                    {
+                        visualRows += 1;
+                    }
+                    if (prefs.useSpacer)
+                    {
+                        int spacersCount = r / 5;
+                        visualRows += spacersCount * dby / dy;
+                    }
                 }
                 result += dy * visualRows;
             }
@@ -269,7 +274,7 @@ namespace MatrixModels.Editor
         {
             return hexGrid ? Vector2.right * (row * 0.5f) : Vector2.zero;
         }
-        private Vector2 SpacingOffset(int row, int column, int offsetX, int offsetY)
+        private Vector2 SpacingOffset(int row, int column, int offsetX, int offsetY, bool useSpacer)
         {
             if (!useSpacer)
             {
