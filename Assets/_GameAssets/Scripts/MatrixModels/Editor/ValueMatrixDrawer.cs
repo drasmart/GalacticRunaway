@@ -1,26 +1,36 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using System.Collections;
-using UnityEngine.UIElements;
-using UnityEditor.UIElements;
 
 namespace MatrixModels.Editor
 {
     [CustomPropertyDrawer(typeof(ValueMatrix<>))]
     public class ValueMatrixDrawer : PropertyDrawer
     {
-        private bool unfold = false;
-        private bool flipX = false;
+        private bool flipX;
         private bool flipY = true;
         private bool showLabels = true;
-        private bool hexGrid = false;
-        private bool useSpacer = false;
+        private bool hexGrid;
+        private bool useSpacer;
         private float dx = 15;
+        
+        // ReSharper disable InconsistentNaming
+        /// <summary>
+        /// Cell line height
+        /// </summary>
         private const float dy = 15;
+        /// <summary>
+        /// Text line height
+        /// </summary>
         private const float dty = 18;
-
+        /// <summary>
+        /// X group spacer width
+        /// </summary>
         private const float dbx = 4;
+        /// <summary>
+        /// Y group spacer height
+        /// </summary>
         private const float dby = 3;
+        // ReSharper restore InconsistentNaming
 
         // Draw the property inside the given rect
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -61,7 +71,7 @@ namespace MatrixModels.Editor
 
             SerializedProperty rowsProperty = property.FindPropertyRelative("rows");
             SerializedProperty colsProperty = property.FindPropertyRelative("columns");
-            SerializedProperty boolProperty = property.FindPropertyRelative("matrix");
+            SerializedProperty matrixProperty = property.FindPropertyRelative("matrix");
 
             EditorGUIUtility.labelWidth = wrl;
             EditorGUI.PropertyField(rowsRect, rowsProperty);
@@ -70,7 +80,7 @@ namespace MatrixModels.Editor
 
             Rect foldoutRect = new Rect(position.x + dfx, position.y + dty, position.width - dfx, dty);
 
-            unfold = EditorGUI.Foldout(foldoutRect, unfold, new GUIContent("Matrix"));
+            bool unfold = property.isExpanded = EditorGUI.Foldout(foldoutRect, property.isExpanded, new GUIContent("Matrix"));
 
             if (rowsProperty.intValue < 1) { rowsProperty.intValue = 1; }
             if (colsProperty.intValue < 1) { colsProperty.intValue = 1; }
@@ -111,7 +121,8 @@ namespace MatrixModels.Editor
                 useSpacer = EditorGUI.Toggle(spacerRect, useSpacer);
             }
 
-            float matrixOffsetX = ((c + (showLabels ? 1 : 0) + (c / 5) * (useSpacer ? dbx : 0)) * dx < position.width - dmx) ? position.x + dmx : rawPosition.x;
+            int xGroups = c / 5;
+            float matrixOffsetX = ((c + (showLabels ? 1 : 0) + xGroups * (useSpacer ? dbx : 0)) * dx < position.width - dmx) ? position.x + dmx : rawPosition.x;
             float matrixOffsetY = position.y + 5 * dty;
 
             if (unfold && showLabels)
@@ -124,15 +135,15 @@ namespace MatrixModels.Editor
             int modulationOffsetY = flipY ? r % 5 : 0;
 
             var baseOffset = new Vector2(dx, dy);
-            for (int rowIndex = 0; boolProperty != null && rowIndex < r; rowIndex++)
+            for (int rowIndex = 0; matrixProperty != null && rowIndex < r; rowIndex++)
             {
-                if (boolProperty.arraySize <= rowIndex)
+                if (matrixProperty.arraySize <= rowIndex)
                 {
-                    boolProperty.InsertArrayElementAtIndex(rowIndex);
+                    matrixProperty.InsertArrayElementAtIndex(rowIndex);
                 }
                 int vRow = rowIndex;
-                if (flipY) { vRow = r - vRow - 1; };
-                SerializedProperty rowProperty = boolProperty.GetArrayElementAtIndex(rowIndex);
+                if (flipY) { vRow = r - vRow - 1; }
+                SerializedProperty rowProperty = matrixProperty.GetArrayElementAtIndex(rowIndex);
                 SerializedProperty rowDataProperty = rowProperty.FindPropertyRelative("cells");
                 for (int columnIndex = 0; columnIndex < c; columnIndex++)
                 {
@@ -143,9 +154,9 @@ namespace MatrixModels.Editor
                     if (unfold)
                     {
                         int vColumn = columnIndex;
-                        if (flipX) { vColumn = c - vColumn - 1; };
+                        if (flipX) { vColumn = c - vColumn - 1; }
                         SerializedProperty cellDataProperty = rowDataProperty.GetArrayElementAtIndex(columnIndex);
-                        Vector2 offset = CellRectOffset(vRow, vColumn) * baseOffset + SpacingOffset(vRow, vColumn, modulationOffsetX, modulationOffsetY);
+                        Vector2 offset = CellRectOffset(vRow) * baseOffset + SpacingOffset(vRow, vColumn, modulationOffsetX, modulationOffsetY);
                         Rect cellRect = new Rect(matrixOffsetX + vColumn * dx + offset.x, matrixOffsetY + vRow * dy + offset.y, dx, dy);
                         EditorGUI.PropertyField(cellRect, cellDataProperty, GUIContent.none);
                     }
@@ -163,15 +174,14 @@ namespace MatrixModels.Editor
             if (unfold && showLabels)
             {
                 // Horizontal Markers
-                int vRow = 0;
-                int mRow = 0;
-                if (flipY) { vRow = r - vRow; mRow = r - mRow - 1; };
+                int vRow = flipY ? r : 0;
+                int mRow = flipY ? r - 1 : 0;
                 for (int i = 0; i < c; i += 5)
                 {
                     int mColumn = i;
                     int vColumn = i + 1;
-                    if (flipX) { vColumn = c - vColumn; mColumn = c - mColumn - 1; };
-                    Vector2 offset = CellRectOffset(mRow, mColumn) * baseOffset + SpacingOffset(mRow, mColumn, modulationOffsetX, modulationOffsetY);
+                    if (flipX) { vColumn = c - vColumn; mColumn = c - mColumn - 1; }
+                    Vector2 offset = CellRectOffset(mRow) * baseOffset + SpacingOffset(mRow, mColumn, modulationOffsetX, modulationOffsetY);
                     string s = i.ToString();
                     int k = s.Length;
                     float w = k * wml;
@@ -182,15 +192,14 @@ namespace MatrixModels.Editor
             if (unfold && showLabels)
             {
                 // Vertical Markers
-                int mColumn = 0;
-                int vColumn = 0;
-                if (flipX) { vColumn = c - vColumn; mColumn = c - mColumn - 1; };
+                int mColumn = flipX ? c : 0;
+                int vColumn = flipX ? c - 1 : 0;
                 for (int i = 0; i < r; i += 5)
                 {
                     int vRow = i + 1;
                     int mRow = i;
-                    if (flipY) { vRow = r - vRow; mRow = r - mRow - 1; };
-                    Vector2 offset = CellRectOffset(mRow, mColumn) * baseOffset + SpacingOffset(mRow, mColumn, modulationOffsetX, modulationOffsetY);
+                    if (flipY) { vRow = r - vRow; mRow = r - mRow - 1; }
+                    Vector2 offset = CellRectOffset(mRow) * baseOffset + SpacingOffset(mRow, mColumn, modulationOffsetX, modulationOffsetY);
                     string s = i.ToString();
                     int k = s.Length;
                     float w = k * wml;
@@ -198,9 +207,13 @@ namespace MatrixModels.Editor
                     GUI.Label(xLabelRect, new GUIContent(s));
                 }
             }
-            while (boolProperty.arraySize > r)
+
+            if (matrixProperty != null)
             {
-                boolProperty.DeleteArrayElementAtIndex(boolProperty.arraySize - 1);
+                while (matrixProperty.arraySize > r)
+                {
+                    matrixProperty.DeleteArrayElementAtIndex(matrixProperty.arraySize - 1);
+                }
             }
 
             // Set indent back to what it was
@@ -212,19 +225,48 @@ namespace MatrixModels.Editor
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            SerializedProperty rowsProperty = property.FindPropertyRelative("rows");
-            int r = rowsProperty.intValue;
-            return dty * (2 + (unfold ? 2 : 0)) + dy * (unfold ? r + 1 + (showLabels ? 1 : 0) + ((r / 5) * (useSpacer ? dby : 0) / dy) : 0);
+            float result = 2 * dty;
+            if (property.isExpanded)
+            {
+                result += 2 * dty;
+                SerializedProperty rowsProperty = property.FindPropertyRelative("rows");
+                int r = rowsProperty.intValue;
+                float visualRows = r + 1;
+                if (showLabels)
+                {
+                    visualRows += 1;
+                }
+                if (useSpacer)
+                {
+                    int spacersCount = r / 5;
+                    visualRows += spacersCount * dby / dy;
+                }
+                result += dy * visualRows;
+            }
+            return result;
         }
 
-        private Vector2 CellRectOffset(int row, int column)
+        private Vector2 CellRectOffset(int row)
         {
             return hexGrid ? Vector2.right * (row * 0.5f) : Vector2.zero;
         }
         private Vector2 SpacingOffset(int row, int column, int offsetX, int offsetY)
         {
-            return useSpacer ? new Vector2(((column + (offsetX > 0 ? 5 - offsetX : 0)) / 5) * dbx, 
-                ((row + (offsetY > 0 ? 5 - offsetY : 0)) / 5) * dby) : Vector2.zero;
+            if (!useSpacer)
+            {
+                return Vector2.zero;
+            }
+
+            var coords = new Vector2Int(column, row);
+            if (offsetX > 0)
+            {
+                coords.x += (5 - offsetX) / 5;
+            }
+            if (offsetY > 0)
+            {
+                coords.y += (5 - offsetY) / 5;
+            }
+            return new Vector2(coords.x * dbx, coords.y * dby);
         }
     }
 }
