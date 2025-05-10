@@ -1,9 +1,8 @@
-﻿using System;
+﻿using UnityEngine;
 
 namespace MatrixModels
 {
-    [AttributeUsage(AttributeTargets.Field)]
-    public class MatrixDisplayAttribute: Attribute
+    public class MatrixDisplayAttribute: PropertyAttribute
     {
         public bool InvertX = false;
         public bool YUp = true;

@@ -4,6 +4,7 @@ using UnityEditor;
 namespace MatrixModels.Editor
 {
     [CustomPropertyDrawer(typeof(ValueMatrix<>))]
+    [CustomPropertyDrawer(typeof(MatrixDisplayAttribute))]
     public class ValueMatrixDrawer : PropertyDrawer
     {
         private bool flipX;
@@ -35,6 +36,15 @@ namespace MatrixModels.Editor
         // Draw the property inside the given rect
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
+            bool hasLockedSettings = false;
+            if (attribute is MatrixDisplayAttribute displayAttribute)
+            {
+                flipX = displayAttribute.InvertX;
+                flipY = displayAttribute.YUp;
+                hexGrid = displayAttribute.Hexagonal;
+                hasLockedSettings = true;
+            }
+            
             // Using BeginProperty / EndProperty on the parent property means that
             // prefab override logic works on the entire property.
             EditorGUI.BeginProperty(position, label, property);
@@ -105,10 +115,7 @@ namespace MatrixModels.Editor
 
                 GUI.Label(flipLblXRect, new GUIContent("Flip X:", "Display only"));
                 GUI.Label(flipLblYRect, new GUIContent("Y:", "Display only"));
-                GUI.Label(showLabelsLblRect, new GUIContent("Labels:"));
-                flipX = EditorGUI.Toggle(xFlipRect, flipX);
-                flipY = EditorGUI.Toggle(yFlipRect, flipY);
-                showLabels = EditorGUI.Toggle(showLabelsRect, showLabels);
+                GUI.Label(showLabelsLblRect, new GUIContent("Labels:", "Display only"));
 
                 Rect hexGridLblRect = new Rect(position.x + dmx, displayOptionsY + dty, whgl, dty);
                 Rect hexGridRect    = new Rect(position.x + dmx + whgl, displayOptionsY + dty, dvx, dty);
@@ -116,8 +123,14 @@ namespace MatrixModels.Editor
                 Rect spacerRect     = new Rect(position.x + dmx + whgl + wspl + dvx, displayOptionsY + dty, dvx, dty);
 
                 GUI.Label(hexGridLblRect, new GUIContent("Hex Grid:", "Use hexagonal grid for elements"));
-                hexGrid = EditorGUI.Toggle(hexGridRect, hexGrid);
                 GUI.Label(spacerLblRect, new GUIContent("Group Spacer:"));
+
+                using (var _ = new EditorGUI.DisabledScope(hasLockedSettings)){
+                    flipX = EditorGUI.Toggle(xFlipRect, flipX);
+                    flipY = EditorGUI.Toggle(yFlipRect, flipY);
+                    hexGrid = EditorGUI.Toggle(hexGridRect, hexGrid);
+                }
+                showLabels = EditorGUI.Toggle(showLabelsRect, showLabels);
                 useSpacer = EditorGUI.Toggle(spacerRect, useSpacer);
             }
 
