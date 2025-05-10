@@ -130,8 +130,14 @@ namespace MatrixModels.Editor
                     flipY = EditorGUI.Toggle(yFlipRect, flipY);
                     hexGrid = EditorGUI.Toggle(hexGridRect, hexGrid);
                 }
-                showLabels = EditorGUI.Toggle(showLabelsRect, showLabels);
-                useSpacer = EditorGUI.Toggle(spacerRect, useSpacer);
+
+                using (var box = ValueMatrixDrawerSettings.instance[property])
+                {
+                    var prefs = box.Value;
+                    prefs.showLabels = showLabels = EditorGUI.Toggle(showLabelsRect, prefs.showLabels);
+                    prefs.useSpacer = useSpacer = EditorGUI.Toggle(spacerRect, prefs.useSpacer);
+                    box.Value = prefs;
+                }
             }
 
             int xGroups = c / 5;
