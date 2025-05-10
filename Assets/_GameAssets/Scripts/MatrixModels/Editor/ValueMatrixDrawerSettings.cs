@@ -19,15 +19,16 @@ namespace MatrixModels.Editor
         {
             get
             {
+                var objType = property.serializedObject?.targetObject?.GetType().FullName;
                 var entry = allPrefs.FirstOrDefault(x =>
-                    (x.className == property.serializedObject?.GetType().FullName)
+                    (x.className == objType)
                     && (x.propertyName == property.name)
                 );
                 if (entry is null)
                 {
                     entry = new KeyedPrefs
                     {
-                        className = property.serializedObject?.GetType().FullName,
+                        className = objType,
                         propertyName = property.name,
                     };
                     allPrefs.Add(entry);
