@@ -22,7 +22,7 @@ public class OutlineBuilder : MonoBehaviour
         onConstructionFinished?.Invoke();
     }
 
-    private void BuildContourMatrix(BoolMatrix cells, BoolMatrix externalEdges, BoolMatrix internalEdges, HexIsland island)
+    private void BuildContourMatrix(ValueMatrix<bool> cells, ValueMatrix<bool> externalEdges, ValueMatrix<bool> internalEdges, HexIsland island)
     {
         if (cells == null || externalEdges == null || internalEdges == null)
         {

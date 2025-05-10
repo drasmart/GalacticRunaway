@@ -3,10 +3,8 @@ using System.Collections;
 
 namespace MatrixModels
 {
-    using ValueType = System.Int32;
-
     [System.Serializable]
-    public class IntMatrix
+    public class ValueMatrix<TValueType>
     {
         [SerializeField]
         [Min(1)]
@@ -46,7 +44,7 @@ namespace MatrixModels
                 matrix = new Row[rows];
                 for (int j = 0; j < rows; j++)
                 {
-                    if (oldMatrix == null && oldMatrix.Length <= j)
+                    if (oldMatrix == null || oldMatrix.Length <= j)
                     {
                         matrix[j] = new Row(columns);
                     }
@@ -58,24 +56,24 @@ namespace MatrixModels
             }
         }
 
-        private ValueType this[int row, int column] {
+        private TValueType this[int row, int column] {
             get { return matrix[row][column]; }
             set { matrix[row][column] = value; }
         }
 
-        public ValueType this[Vector2Int coords] {
+        public TValueType this[Vector2Int coords] {
             get { return this[coords.y, coords.x]; }
             set { this[coords.y, coords.x] = value; }
         }
 
         public Vector2Int Size {
             get { return new Vector2Int(columns, rows); }
-            set { Columns = value.y; Rows = value.x; }
+            set { Columns = value.x; Rows = value.y; }
         }
 
-        public ValueType[,] ToArray()
+        public TValueType[,] ToArray()
         {
-            var result = new ValueType[columns, rows];
+            var result = new TValueType[columns, rows];
             for (int x = 0; x < columns; x++)
                 for (int y = 0; y < rows; y++)
                     result[x, y] = matrix[y][x];
@@ -86,9 +84,9 @@ namespace MatrixModels
         public class Row
         {
             [SerializeField]
-            private ValueType[] cells = new ValueType[] { default(ValueType) };
+            private TValueType[] cells = new TValueType[] { default(TValueType) };
 
-            public ValueType this[int i] {
+            public TValueType this[int i] {
                 get { return cells[i]; }
                 set { cells[i] = value; }
             }
@@ -104,11 +102,11 @@ namespace MatrixModels
                 {
                     return;
                 }
-                ValueType[] oldCells = cells;
-                cells = new ValueType[n];
+                TValueType[] oldCells = cells;
+                cells = new TValueType[n];
                 for (int i = 0; i < n; i++)
                 {
-                    cells[i] = ((oldCells != null && i < oldCells.Length) ? oldCells[i] : default(ValueType));
+                    cells[i] = ((oldCells != null && i < oldCells.Length) ? oldCells[i] : default(TValueType));
                 }
             }
         }

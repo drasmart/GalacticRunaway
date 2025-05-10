@@ -6,7 +6,8 @@ using UnityEditor.UIElements;
 
 namespace MatrixModels.Editor
 {
-    public abstract class BaseMatrixDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(ValueMatrix<>))]
+    public class ValueMatrixDrawer : PropertyDrawer
     {
         private bool unfold = false;
         private bool flipX = false;

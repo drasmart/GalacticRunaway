@@ -23,7 +23,7 @@ namespace HexField
             Internal,
         }
 
-        public HexNavMesh(BoolMatrix passableCells)
+        public HexNavMesh(ValueMatrix<bool> passableCells)
         {
             var srcSize = passableCells.Size;
             cellsSize = new HexCoords2Int(srcSize.x, srcSize.y);
