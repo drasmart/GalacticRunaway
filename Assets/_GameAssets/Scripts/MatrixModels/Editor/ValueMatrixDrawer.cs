@@ -280,16 +280,16 @@ namespace MatrixModels.Editor
             {
                 return Vector2.zero;
             }
-
             var coords = new Vector2Int(column, row);
             if (offsetX > 0)
             {
-                coords.x += (5 - offsetX) / 5;
+                coords.x += 5 - offsetX;
             }
             if (offsetY > 0)
             {
-                coords.y += (5 - offsetY) / 5;
+                coords.y += 5 - offsetY;
             }
+            coords /= 5;
             return new Vector2(coords.x * dbx, coords.y * dby);
         }
     }
