@@ -6,7 +6,8 @@ using HexGrid;
 
 public class OutlineRenderer : MonoBehaviour
 {
-    public ValueMatrix<bool> flags = new ValueMatrix<bool>();
+    [MatrixDisplay(Hexagonal = true)]
+    public ValueMatrix<bool> flags = new();
     public Color sphereColor = Color.cyan;
     public Color boundsColor = Color.white;
     [Range(0, 1)]
